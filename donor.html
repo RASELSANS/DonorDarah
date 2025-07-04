@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Donor Darah Nasional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .blood-type-a { background-color: #ff5252; }
+        .blood-type-b { background-color: #4fc3f7; }
+        .blood-type-ab { background-color: #9c27b0; }
+        .blood-type-o { background-color: #ff9800; }
+        
+        .hero-pattern {
+            background-image: url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/d2133615-499d-4420-b4bb-f688c277e9a0.png');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .map-container {
+            height: 400px;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-red-700 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/e6e3e821-c562-4426-bcc3-aec8df74f97e.png" alt="Logo PMI dengan teks Palang Merah Indonesia berwarna putih" class="h-10 w-10">
+                <span class="font-bold text-xl">Sistem Donor Darah</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#" class="hover:text-red-200">Beranda</a>
+                <a href="#" class="hover:text-red-200">Cari Donor</a>
+                <a href="#" class="hover:text-red-200">Donasi</a>
+                <a href="#" class="hover:text-red-200">Event</a>
+                <a href="#" id="login-btn" class="bg-white text-red-700 px-4 py-2 rounded-full hover:bg-red-50 font-medium">
+                    Login
+                </a>
+            </div>
+            
+            <button class="md:hidden text-white">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero-pattern text-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">Cari Donor Darah dengan Mudah</h1>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Temukan stok darah yang Anda butuhkan di seluruh Indonesia. Ribuan orang telah bergabung untuk saling membantu.</p>
+            
+            <div class="bg-white rounded-lg shadow-lg p-4 max-w-4xl mx-auto">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <select class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-700">
+                            <option value="">Pilih Golongan Darah</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="AB">AB</option>
+                            <option value="O">O</option>
+                        </select>
+                    </div>
+                    <div class="flex-1">
+                        <select class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-700">
+                            <option value="">Pilih Kota</option>
+                            <option value="Jakarta">Jakarta</option>
+                            <option value="Bandung">Bandung</option>
+                            <option value="Surabaya">Surabaya</option>
+                            <option value="Yogyakarta">Yogyakarta</option>
+                        </select>
+                    </div>
+                    <button class="bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+                        <i class="fas fa-search mr-2"></i> Cari
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Blood Stock Overview -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Stok Darah Nasional</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <div class="blood-type-a w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <span class="text-white text-2xl font-bold">A</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Golongan A</h3>
+                    <p class="text-gray-600 mb-2">Stok saat ini: <span class="font-bold">120</span> kantong</p>
+                    <div class="h-2 bg-gray-200 rounded-full mb-2">
+                        <div class="h-2 bg-red-500 rounded-full w-3/4"></div>
+                    </div>
+                    <p class="text-sm text-gray-500">Kebutuhan harian: 80-100 kantong</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <div class="blood-type-b w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <span class="text-white text-2xl font-bold">B</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Golongan B</h3>
+                    <p class="text-gray-600 mb-2">Stok saat ini: <span class="font-bold">95</span> kantong</p>
+                    <div class="h-2 bg-gray-200 rounded-full mb-2">
+                        <div class="h-2 bg-blue-400 rounded-full w-2/3"></div>
+                    </div>
+                    <p class="text-sm text-gray-500">Kebutuhan harian: 60-80 kantong</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <div class="blood-type-ab w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <span class="text-white text-2xl font-bold">AB</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Golongan AB</h3>
+                    <p class="text-gray-600 mb-2">Stok saat ini: <span class="font-bold">45</span> kantong</p>
+                    <div class="h-2 bg-gray-200 rounded-full mb-2">
+                        <div class="h-2 bg-purple-600 rounded-full w-1/3"></div>
+                    </div>
+                    <p class="text-sm text-gray-500">Kebutuhan harian: 30-40 kantong</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <div class="blood-type-o w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <span class="text-white text-2xl font-bold">O</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Golongan O</h3>
+                    <p class="text-gray-600 mb-2">Stok saat ini: <span class="font-bold">150</span> kantong</p>
+                    <div class="h-2 bg-gray-200 rounded-full mb-2">
+                        <div class="h-2 bg-orange-500 rounded-full w-4/5"></div>
+                    </div>
+                    <p class="text-sm text-gray-500">Kebutuhan harian: 100-120 kantong</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Search by Location -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-800">Cari Donor Darah Berdasarkan Lokasi</h2>
+                    <p class="text-gray-600 mb-8">Temukan stok darah terdekat di kotamu. Sistem kami terintegrasi dengan bank darah di seluruh Indonesia untuk memberikan informasi real-time.</p>
+                    
+                    <div class="mb-8">
+                        <div class="map-container rounded-lg shadow-lg">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/9c86bfce-d994-4637-855b-28059101be42.png" alt="Peta Indonesia dengan penanda lokasi bank darah di berbagai kota" class="w-full h-full object-cover rounded-lg" />
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Kota Populer</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full transition">Jakarta</button>
+                            <button class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full transition">Bandung</button>
+                            <button class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full transition">Surabaya</button>
+                            <button class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full transition">Yogyakarta</button>
+                            <button class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full transition">Medan</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex-1 bg-gray-50 p-8 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-6 text-gray-800">Stok Darah di Jakarta</h3>
+                    
+                    <div class="mb-8">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">Golongan A</span>
+                            <span class="text-red-500 font-semibold">25 kantong</span>
+                        </div>
+                        <div class="h-3 bg-gray-200 rounded-full">
+                            <div class="h-3 bg-red-500 rounded-full w-3/4"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">Golongan B</span>
+                            <span class="text-blue-500 font-semibold">18 kantong</span>
+                        </div>
+                        <div class="h-3 bg-gray-200 rounded-full">
+                            <div class="h-3 bg-blue-500 rounded-full w-2/3"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">Golongan AB</span>
+                            <span class="text-purple-600 font-semibold">8 kantong</span>
+                        </div>
+                        <div class="h-3 bg-gray-200 rounded-full">
+                            <div class="h-3 bg-purple-600 rounded-full w-1/3"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">Golongan O</span>
+                            <span class="text-orange-500 font-semibold">32 kantong</span>
+                        </div>
+                        <div class="h-3 bg-gray-200 rounded-full">
+                            <div class="h-3 bg-orange-500 rounded-full w-4/5"></div>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                        <i class="fas fa-phone-alt mr-2"></i> Hubungi Bank Darah Terdekat
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Request Blood -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden max-w-4xl mx-auto">
+                <div class="md:flex">
+                    <div class="md:w-1/3 bg-red-700 text-white p-8 flex flex-col justify-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/08f096da-b6fc-4007-a84a-eaedeb56d32d.png" alt="Ilustrasi orang memegang tetesan darah merah dengan latar belakang putih" class="mb-6 rounded-lg" />
+                        <h3 class="text-2xl font-bold mb-4">Butuh Darah Segera?</h3>
+                        <p>Jika stok darah di daerahmu kosong, kamu bisa mengajukan permintaan darah melalui sistem kami.</p>
+                    </div>
+                    
+                    <div class="md:w-2/3 p-8">
+                        <h2 class="text-2xl font-bold mb-6 text-gray-800">Formulir Permintaan Darah</h2>
+                        
+                        <form>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Golongan Darah</label>
+                                    <select class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                                        <option value="">Pilih Golongan Darah</option>
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="AB">AB</option>
+                                        <option value="O">O</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Jumlah yang Dibutuhkan</label>
+                                    <input type="number" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Contoh: 2">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Lokasi</label>
+                                    <input type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Kota/Daerah">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Nama Rumah Sakit</label>
+                                    <input type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Nama RS">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label class="block text-gray-700 mb-2">Deskripsi Kebutuhan</label>
+                                <textarea class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 h-32" placeholder="Jelaskan kebutuhan darah Anda secara detail (nama pasien, diagnosa, kebutuhan khusus, dll)"></textarea>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label class="block text-gray-700 mb-2">Nomor Telepon</label>
+                                <input type="tel" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="081234567890">
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                                Ajukan Permintaan Darah
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Admin Dashboard (Visible after login) -->
+    <section id="admin-dashboard" class="py-16 bg-white hidden">
+        <div class="container mx-auto px-4">
+            <div class="dashboard-grid">
+                <!-- Sidebar -->
+                <div class="bg-gray-800 text-white p-6 rounded-l-lg">
+                    <div class="flex items-center mb-8">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/01e9c757-5f80-419e-8cbc-50457f60ae25.png" alt="Foto profil admin dengan latar belakang merah" class="h-10 w-10 rounded-full mr-3">
+                        <div>
+                            <h4 class="font-bold">Admin PMI</h4>
+                            <p class="text-xs text-gray-400">Jakarta Pusat</p>
+                        </div>
+                    </div>
+                    
+                    <nav>
+                        <h5 class="text-sm font-semibold text-gray-400 mb-2">Menu Utama</h5>
+                        <ul class="space-y-2 mb-8">
+                            <li><a href="#" class="flex items-center p-2 rounded-lg bg-red-700"><i class="fas fa-tachometer-alt mr-3"></i> Dashboard</a></li>
+                            <li><a href="#" class="flex items-center p-2 rounded-lg hover:bg-gray-700"><i class="fas fa-blood-alt mr-3"></i> Stok Darah</a></li>
+                            <li><a href="#" class="flex items-center p-2 rounded-lg hover:bg-gray-700"><i class="fas fa-users mr-3"></i> Donor Darah</a></li>
+                            <li><a href="#" class="flex items-center p-2 rounded-lg hover:bg-gray-700"><i class="fas fa-clipboard-list mr-3"></i> Permintaan Darah</a></li>
+                            <li><a href="#" class="flex items-center p-2 rounded-lg hover:bg-gray-700"><i class="fas fa-bell mr-3"></i> Notifikasi</a></li>
+                        </ul>
+                        
+                        <h5 class="text-sm font-semibold text-gray-400 mb-2">Administrasi</h5>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="flex items-center p-2 rounded-lg hover:bg-gray-700"><i class="fas fa-cog mr-3"></i> Pengaturan</a></li>
+                            <li><a href="#" class="flex items-center p-2 rounded-lg hover:bg-gray-700"><i class="fas fa-sign-out-alt mr-3"></i> Logout</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="bg-gray-50 p-6 rounded-r-lg border-l border-gray-200">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-2xl font-bold text-gray-800">Dashboard Admin</h2>
+                        <button class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-plus mr-2"></i> Tambah Stok Darah
+                        </button>
+                    </div>
+                    
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-blue-100 text-blue-500 mr-4">
+                                    <i class="fas fa-donate text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm text-gray-500">Total Donor</h3>
+                                    <p class="text-2xl font-bold">1,234</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-green-100 text-green-500 mr-4">
+                                    <i class="fas fa-hand-holding-medical text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm text-gray-500">Permintaan Hari Ini</h3>
+                                    <p class="text-2xl font-bold">32</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-orange-100 text-orange-500 mr-4">
+                                    <i class="fas fa-exclamation-triangle text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm text-gray-500">Stok Darah Kritis</h3>
+                                    <p class="text-2xl font-bold">4</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Requests -->
+                    <div class="bg-white p-6 rounded-lg shadow mb-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-semibold">Permintaan Darah Terbaru</h3>
+                            <a href="#" class="text-sm text-red-700 hover:underline">Lihat Semua</a>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gol. Darah</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">REQ2023001</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-red-500">A+</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">RS Fatmawati, Jakarta</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-2">Proses</button>
+                                            <button class="text-gray-600 hover:text-gray-900">Detail</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">REQ2023002</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-blue-500">B+</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">RS Cipto Mangunkusumo, Jakarta</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Tersedia</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-2">Proses</button>
+                                            <button class="text-gray-600 hover:text-gray-900">Detail</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">REQ2023003</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-purple-600">AB+</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">RS Persahabatan, Jakarta</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Kritis</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-2">Broadcast</button>
+                                            <button class="text-gray-600 hover:text-gray-900">Detail</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Blood Stock Management -->
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-semibold">Manajemen Stok Darah</h3>
+                            <div class="flex space-x-2">
+                                <select class="border rounded-lg px-3 py-1 text-sm">
+                                    <option>Semua Golongan</option>
+                                    <option>A</option>
+                                    <option>B</option>
+                                    <option>AB</option>
+                                    <option>O</option>
+                                </select>
+                                <select class="border rounded-lg px-3 py-1 text-sm">
+                                    <option>Semua Kota</option>
+                                    <option>Jakarta</option>
+                                    <option>Bandung</option>
+                                    <option>Surabaya</option>
+                                    <option>Yogyakarta</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="border rounded-lg p-4">
+                                <div class="flex justify-between mb-2">
+                                    <h4 class="font-semibold text-red-600">Golongan A</h4>
+                                    <span class="text-sm text-gray-500">25 Kantong</span>
+                                </div>
+                                <div class="h-2 bg-gray-200 rounded-full mb-2">
+                                    <div class="h-2 bg-red-500 rounded-full w-3/4"></div>
+                                </div>
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span>Terakhir Update: 2 hari lalu</span>
+                                    <button class="text-blue-500 hover:underline">Edit</button>
+                                </div>
+                            </div>
+                            
+                            <div class="border rounded-lg p-4">
+                                <div class="flex justify-between mb-2">
+                                    <h4 class="font-semibold text-blue-500">Golongan B</h4>
+                                    <span class="text-sm text-gray-500">18 Kantong</span>
+                                </div>
+                                <div class="h-2 bg-gray-200 rounded-full mb-2">
+                                    <div class="h-2 bg-blue-500 rounded-full w-2/3"></div>
+                                </div>
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span>Terakhir Update: 1 hari lalu</span>
+                                    <button class="text-blue-500 hover:underline">Edit</button>
+                                </div>
+                            </div>
+                            
+                            <div class="border rounded-lg p-4">
+                                <div class="flex justify-between mb-2">
+                                    <h4 class="font-semibold text-purple-600">Golongan AB</h4>
+                                    <span class="text-sm text-gray-500">8 Kantong</span>
+                                </div>
+                                <div class="h-2 bg-gray-200 rounded-full mb-2">
+                                    <div class="h-2 bg-purple-600 rounded-full w-1/3"></div>
+                                </div>
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span>Terakhir Update: 3 hari lalu</span>
+                                    <button class="text-blue-500 hover:underline">Edit</button>
+                                </div>
+                            </div>
+                            
+                            <div class="border rounded-lg p-4">
+                                <div class="flex justify-between mb-2">
+                                    <h4 class="font-semibold text-orange-500">Golongan O</h4>
+                                    <span class="text-sm text-gray-500">32 Kantong</span>
+                                </div>
+                                <div class="h-2 bg-gray-200 rounded-full mb-2">
+                                    <div class="h-2 bg-orange-500 rounded-full w-4/5"></div>
+                                </div>
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span>Terakhir Update: Hari ini</span>
+                                    <button class="text-blue-500 hover:underline">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Super Admin Dashboard (Visible after login) -->
+    <section id="super-admin-dashboard" class="py-16 bg-gray-100 hidden">
+        <!-- Similar structure to admin dashboard but with more admin tools -->
+        <!-- Not shown for brevity, but would include user management, global stats, system settings, etc. -->
+    </section>
+    
+    <!-- Blood Owner Dashboard (Visible after login) -->
+    <section id="blood-owner-dashboard" class="py-16 bg-white hidden">
+        <div class="container mx-auto px-4">
+            <div class="dashboard-grid">
+                <!-- Sidebar -->
+                <div class="bg-gray-800 text-white p-6 rounded-l-lg">
+                    <div class="flex items-center mb-8">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1a1b9be8-f4ab-411c-858a-b576f5a59d37.png" alt="Foto profil donor dengan latar belakang merah" class="h-10 w-10 rounded-full mr-3">
+                        <div>
+                            <h4 class="font-bold">John Doe</h4>
+                            <p class="text-xs text-gray-400">Golongan O+</p>
+                        </div>
+                    </div>
+                    
+                    <nav>
+                        <h5 class="text-sm font-semibold text-gray-400 mb-2">Menu Utama</h5>
+                        <ul class="space-y-2 mb-8">
+                            <li><a href="#" class="flex items-center p-2 rounded-lg bg-red-700"><i class="fas fa-tachometer-alt mr-3"></i> Dashboard</a></li>
+                            <li><a href="#" class="flex items-center p-2 rounded-lg hover:bg-gray-700"><i class="fas fa-history mr-3"></i> Riwayat Donor</a></li>
+                            <li><a href="#" class="flex items-center p-2 rounded-lg hover:bg-gray-700"><i class="fas fa-bell mr-3"></i> Notifikasi</a></li>
+                            <li><a href="#" class="flex items-center p-2 rounded-lg hover:bg-gray-700"><i class="fas fa-calendar-alt mr-3"></i> Jadwal Donor</a></li>
+                        </ul>
+                        
+                        <h5 class="text-sm font-semibold text-gray-400 mb-2">Profil</h5>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="flex items-center p-2 rounded-lg hover:bg-gray-700"><i class="fas fa-user mr-3"></i> Data Diri</a></li>
+                            <li><a href="#" class="flex items-center p-2 rounded-lg hover:bg-gray-700"><i class="fas fa-cog mr-3"></i> Pengaturan</a></li>
+                            <li><a href="#" class="flex items-center p-2 rounded-lg hover:bg-gray-700"><i class="fas fa-sign-out-alt mr-3"></i> Keluar</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="bg-gray-50 p-6 rounded-r-lg border-l border-gray-200">
+                    <h2 class="text-2xl font-bold mb-8 text-gray-800">Selamat Datang, John!</h2>
+                    
+                    <!-- Current Requests -->
+                    <div class="mb-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold">Permintaan Darah untuk Golongan O+</h3>
+                            <span class="text-sm text-gray-500">3 permintaan aktif</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Request Card 1 -->
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <div class="flex justify-between mb-3">
+                                    <span class="text-sm font-medium text-gray-500">REQ2023001</span>
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Darurat</span>
+                                </div>
+                                <h4 class="text-lg font-semibold mb-2">Rs. Fatmawati, Jakarta</h4>
+                                <p class="text-sm text-gray-600 mb-4">Dibutuhkan 2 kantong darah untuk operasi jantung terbuka</p>
+                                
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-500">1 jam yang lalu</span>
+                                    <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded-lg text-sm">
+                                        Saya Bisa Donor
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Request Card 2 -->
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <div class="flex justify-between mb-3">
+                                    <span class="text-sm font-medium text-gray-500">REQ2023002</span>
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Biasa</span>
+                                </div>
+                                <h4 class="text-lg font-semibold mb-2">Rs. Cipto Mangunkusumo</h4>
+                                <p class="text-sm text-gray-600 mb-4">Dibutuhkan 1 kantong darah untuk operasi caesar</p>
+                                
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-500">3 hari yang lalu</span>
+                                    <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded-lg text-sm">
+                                        Saya Bisa Donor
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Donor History -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Riwayat Donor Saya</h3>
+                        
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Donor Berikutnya</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15 Jan 2023</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">UTD PMI Jakarta</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Berhasil</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15 April 2023</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10 Okt 2022</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">UTD PMI Jakarta</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Berhasil</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10 Jan 2023</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Login Modal -->
+    <div id="login-modal" class="login-modal">
+        <div class="bg-white rounded-lg shadow-xl mx-auto mt-16 max-w-md w-full">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold text-gray-800">Login</h3>
+                    <button id="close-login-modal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 mb-2">Password</label>
+                        <input type="password" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 mb-2">Login Sebagai</label>
+                        <select class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <option value="customer">Customer</option>
+                            <option value="admin">Admin PMI</option>
+                            <option value="superadmin">Super Admin</option>
+                            <option value="bloodowner">Pemilik Darah</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                        Masuk
+                    </button>
+                    
+                    <div class="mt-4 text-center">
+                        <a href="#" class="text-red-700 hover:underline">Lupa password?</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-12 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Tentang Kami</h3>
+                    <p class="text-gray-400">Sistem Donor Darah Nasional adalah platform untuk menghubungkan mereka yang membutuhkan darah dengan para pendonor di seluruh Indonesia.</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Kontak</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center"><i class="fas fa-phone-alt mr-3"></i> (021) 1234567</li>
+                        <li class="flex items-center"><i class="fas fa-envelope mr-3"></i> info@donordarah.id</li>
+                        <li class="flex items-center"><i class="fas fa-map-marker-alt mr-3"></i> Jl. Palang Merah No.1, Jakarta</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Informasi</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Syarat Donor Darah</a></li>
+                        <li><a href="#" class="hover:text-white">Prosedur Donor</a></li>
+                        <li><a href="#" class="hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Sosial Media</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="bg-gray-700 hover:bg-gray-600 w-10 h-10 rounded-full flex items-center justify-center">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="bg-gray-700 hover:bg-gray-600 w-10 h-10 rounded-full flex items-center justify-center">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="bg-gray-700 hover:bg-gray-600 w-10 h-10 rounded-full flex items-center justify-center">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="bg-gray-700 hover:bg-gray-600 w-10 h-10 rounded-full flex items-center justify-center">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-6 text-center text-gray-400">
+                <p>© 2023 Sistem Donor Darah Nasional. Semua hak dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Login Modal Toggle
+        document.getElementById('login-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('login-modal').style.display = 'block';
+        });
+        
+        document.getElementById('close-login-modal').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('login-modal').style.display = 'none';
+        });
+        
+        // Simulate login (in a real app this would be connected to backend)
+        document.querySelector('#login-modal form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userType = this.querySelector('select').value;
+            alert('Login berhasil sebagai: ' + userType);
+            
+            // Hide all dashboards first
+            document.querySelectorAll('section[id$="-dashboard"]').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Show the appropriate dashboard
+            if (userType === 'admin') {
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+            } else if (userType === 'superadmin') {
+                document.getElementById('super-admin-dashboard').classList.remove('hidden');
+            } else if (userType === 'bloodowner') {
+                document.getElementById('blood-owner-dashboard').classList.remove('hidden');
+            }
+            
+            // Hide login modal
+            document.getElementById('login-modal').style.display = 'none';
+        });
+        
+        // Simulate blood request broadcast
+        function simulateBroadcast() {
+            alert('Permintaan telah dibroadcast ke semua pendonor dengan golongan darah yang sesuai di daerah tersebut.');
+        }
+    </script>
+</body>
+</html>
